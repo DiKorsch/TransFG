@@ -18,10 +18,10 @@ from torch.utils.tensorboard import SummaryWriter
 from apex import amp
 from apex.parallel import DistributedDataParallel as DDP
 
-from models.modeling import VisionTransformer, CONFIGS
-from utils.scheduler import WarmupLinearSchedule, WarmupCosineSchedule
-from utils.data_utils import get_loader
-from utils.dist_util import get_world_size
+from transfg.models.modeling import VisionTransformer, CONFIGS
+from transfg.utils.scheduler import WarmupLinearSchedule, WarmupCosineSchedule
+from transfg.utils.data_utils import get_loader
+from transfg.utils.dist_util import get_world_size
 
 logger = logging.getLogger(__name__)
 
@@ -162,7 +162,7 @@ def valid(args, model, writer, test_loader, global_step):
     logger.info("Valid Accuracy: %2.5f" % val_accuracy)
     if args.local_rank in [-1, 0]:
         writer.add_scalar("test/accuracy", scalar_value=val_accuracy, global_step=global_step)
-        
+
     return val_accuracy
 
 def train(args, model):

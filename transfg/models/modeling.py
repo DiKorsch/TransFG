@@ -18,7 +18,7 @@ from torch.nn import CrossEntropyLoss, Dropout, Softmax, Linear, Conv2d, LayerNo
 from torch.nn.modules.utils import _pair
 from scipy import ndimage
 
-import models.configs as configs
+import transfg.models.configs as configs
 
 logger = logging.getLogger(__name__)
 
@@ -261,7 +261,7 @@ class Encoder(nn.Module):
         attn_weights = []
         for layer in self.layer:
             hidden_states, weights = layer(hidden_states)
-            attn_weights.append(weights)            
+            attn_weights.append(weights)
         part_num, part_inx = self.part_select(attn_weights)
         part_inx = part_inx + 1
         parts = []
@@ -271,7 +271,7 @@ class Encoder(nn.Module):
         parts = torch.stack(parts).squeeze(1)
         concat = torch.cat((hidden_states[:,0].unsqueeze(1), parts), dim=1)
         part_states, part_weights = self.part_layer(concat)
-        part_encoded = self.part_norm(part_states)   
+        part_encoded = self.part_norm(part_states)
 
         return part_encoded
 
@@ -359,7 +359,7 @@ class VisionTransformer(nn.Module):
 
                 for bname, block in self.transformer.embeddings.hybrid_model.body.named_children():
                     for uname, unit in block.named_children():
-                        unit.load_from(weights, n_block=bname, n_unit=uname) 
+                        unit.load_from(weights, n_block=bname, n_unit=uname)
 
 def con_loss(features, labels):
     B, _ = features.shape
